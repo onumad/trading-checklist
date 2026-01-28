@@ -27,6 +27,7 @@
           <select id="firm" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
             <option value="">Select Firm...</option>
             <option value="Personal">Personal</option>
+            <option value="Bulenox">Bulenox</option>
             <option value="Lucid">Lucid Trading</option>
             <option value="MyFundedFutures">My Funded Futures</option>
             <option value="Phidias">Phidias</option>
@@ -164,6 +165,7 @@
     // Account types by firm (based on actual 2026 offerings)
     const firmAccounts = {
       'Personal': ['Personal Account'],
+      'Bulenox': ['10K', '25K', '50K', '100K', '150K', '250K'],
       'Lucid': [
         'LucidFlex 25K', 'LucidFlex 50K', 'LucidFlex 100K', 'LucidFlex 150K',
         'LucidBlack 25K', 'LucidBlack 50K', 'LucidBlack 100K', 'LucidBlack 150K',
