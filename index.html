@@ -23,28 +23,28 @@
       
       <form id="tradeForm">
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-sm text-gray-600">Account (Prop Firm)</label>
-          <select id="account" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
-            <option value="">Select...</option>
+          <label class="block font-semibold mb-2 text-sm text-gray-600">Prop Firm</label>
+          <select id="firm" required class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
+            <option value="">Select Firm...</option>
             <option value="Personal">Personal</option>
-            <option value="Lucid">Lucid</option>
-            <option value="Tradovate">Tradovate</option>
+            <option value="Lucid">Lucid Trading</option>
             <option value="Phidias">Phidias</option>
             <option value="TradeDay">TradeDay</option>
             <option value="TakeProfitTrader">TakeProfitTrader</option>
-            <option value="FTMO">FTMO</option>
             <option value="TopStep">TopStep</option>
           </select>
         </div>
         
-        <div class="mb-5">
-          <label class="block font-semibold mb-2 text-sm text-gray-600">Account ID</label>
-          <input type="text" id="accountId" placeholder="LFE0505707701015" class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
+        <div class="mb-5" id="accountTypeWrapper" style="display: none;">
+          <label class="block font-semibold mb-2 text-sm text-gray-600">Account Size</label>
+          <select id="accountType" class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
+            <option value="">Select Account Size...</option>
+          </select>
         </div>
         
         <div class="mb-5">
-          <label class="block font-semibold mb-2 text-sm text-gray-600">Account Type</label>
-          <input type="text" id="accountType" placeholder="Lucid Flex 50k" class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
+          <label class="block font-semibold mb-2 text-sm text-gray-600">Account ID (Optional)</label>
+          <input type="text" id="accountId" placeholder="LFE0505707701015" class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
         </div>
         
         <div class="mb-5">
@@ -159,6 +159,35 @@
   <script>
     let currentTimeStatus = false;
     
+    // Account types by firm
+    const firmAccounts = {
+      'Personal': ['Personal Account'],
+      'Lucid': ['Flex 25K', 'Flex 50K', 'Flex 100K', 'Flex 150K'],
+      'Phidias': ['50K', '100K'],
+      'TradeDay': ['10K', '25K', '50K', '100K', '150K', '250K'],
+      'TakeProfitTrader': ['25K', '50K', '75K', '100K', '150K'],
+      'TopStep': ['50K', '100K', '150K']
+    };
+    
+    // Update account dropdown when firm changes
+    document.getElementById('firm').addEventListener('change', function() {
+      const firm = this.value;
+      const accountTypeWrapper = document.getElementById('accountTypeWrapper');
+      const accountTypeSelect = document.getElementById('accountType');
+      
+      if (!firm) {
+        accountTypeWrapper.style.display = 'none';
+        accountTypeSelect.innerHTML = '<option value="">Select Account Size...</option>';
+        return;
+      }
+      
+      const accounts = firmAccounts[firm] || [];
+      accountTypeSelect.innerHTML = '<option value="">Select Account Size...</option>' + 
+        accounts.map(acc => `<option value="${acc}">${acc}</option>`).join('');
+      
+      accountTypeWrapper.style.display = 'block';
+    });
+    
     // Check time on load
     async function checkTime() {
       const res = await fetch('http://104.236.41.155:8080/api/time');
@@ -214,7 +243,7 @@
       e.preventDefault();
       
       const data = {
-        account: document.getElementById('account').value,
+        account: document.getElementById('firm').value,
         accountId: document.getElementById('accountId').value,
         accountType: document.getElementById('accountType').value,
         symbol: document.getElementById('symbol').value,
@@ -286,6 +315,7 @@
       document.getElementById('tradeForm').reset();
       document.getElementById('rrDisplay').classList.add('hidden');
       document.getElementById('errorBox').classList.add('hidden');
+      document.getElementById('accountTypeWrapper').style.display = 'none';
     }
     
     async function journalTradeFromHistory(trade) {
@@ -377,7 +407,7 @@
                   minute: '2-digit' 
                 })}</td>
                 <td class="p-2"><strong>${t.symbol || 'N/A'}</strong></td>
-                <td class="p-2">${t.account || 'N/A'}</td>
+                <td class="p-2">${t.accountType || t.account || 'N/A'}</td>
                 <td class="p-2"><span class="inline-block px-2 py-1 rounded text-xs font-semibold ${badgeClass}">${t.direction.toUpperCase()}</span></td>
                 <td class="p-2">$${t.entry}</td>
                 <td class="p-2">1:${t.rr}</td>
