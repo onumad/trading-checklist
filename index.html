@@ -36,9 +36,9 @@
         </div>
         
         <div class="mb-5" id="accountTypeWrapper" style="display: none;">
-          <label class="block font-semibold mb-2 text-sm text-gray-600">Account Size</label>
+          <label class="block font-semibold mb-2 text-sm text-gray-600">Account Type</label>
           <select id="accountType" class="w-full p-3 border-2 border-gray-200 rounded-lg text-base transition-colors focus:outline-none focus:border-indigo-500">
-            <option value="">Select Account Size...</option>
+            <option value="">Select Account Type...</option>
           </select>
         </div>
         
@@ -159,12 +159,23 @@
   <script>
     let currentTimeStatus = false;
     
-    // Account types by firm
+    // Account types by firm (based on actual 2026 offerings)
     const firmAccounts = {
       'Personal': ['Personal Account'],
-      'Lucid': ['Flex 25K', 'Flex 50K', 'Flex 100K', 'Flex 150K'],
-      'Phidias': ['50K', '100K'],
-      'TradeDay': ['10K', '25K', '50K', '100K', '150K', '250K'],
+      'Lucid': [
+        'LucidFlex 25K', 'LucidFlex 50K', 'LucidFlex 100K', 'LucidFlex 150K',
+        'LucidBlack 25K', 'LucidBlack 50K', 'LucidBlack 100K', 'LucidBlack 150K',
+        'LucidDirect 25K', 'LucidDirect 50K', 'LucidDirect 100K', 'LucidDirect 150K',
+        'Lucid Test 25K', 'Lucid Test 50K', 'Lucid Test 100K', 'Lucid Test 150K'
+      ],
+      'Phidias': [
+        'Fundamental 50K', 'Fundamental 100K',
+        'Swing 50K', 'Swing 100K',
+        'Static 25K',
+        '10K Drawdown',
+        'Master 1M'
+      ],
+      'TradeDay': ['50K', '100K', '150K'],
       'TakeProfitTrader': ['25K', '50K', '75K', '100K', '150K'],
       'TopStep': ['50K', '100K', '150K']
     };
@@ -177,12 +188,12 @@
       
       if (!firm) {
         accountTypeWrapper.style.display = 'none';
-        accountTypeSelect.innerHTML = '<option value="">Select Account Size...</option>';
+        accountTypeSelect.innerHTML = '<option value="">Select Account Type...</option>';
         return;
       }
       
       const accounts = firmAccounts[firm] || [];
-      accountTypeSelect.innerHTML = '<option value="">Select Account Size...</option>' + 
+      accountTypeSelect.innerHTML = '<option value="">Select Account Type...</option>' + 
         accounts.map(acc => `<option value="${acc}">${acc}</option>`).join('');
       
       accountTypeWrapper.style.display = 'block';
