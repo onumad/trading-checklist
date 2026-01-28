@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Checklist</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #667eea;
+    }
+    
+    .time-status {
+      font-size: 14px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    
+    .time-status.open {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .time-status.closed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #555;
+    }
+    
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
+    .rr-display {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+      border-left: 4px solid #667eea;
+    }
+    
+    .rr-display h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #667eea;
+    }
+    
+    .rr-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 14px;
+    }
+    
+    .rr-item {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .rr-label {
+      color: #666;
+    }
+    
+    .rr-value {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .rr-ratio {
+      grid-column: 1 / -1;
+      font-size: 18px;
+      font-weight: bold;
+      padding-top: 10px;
+      border-top: 2px solid #e0e0e0;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .rr-ratio.good {
+      color: #28a745;
+    }
+    
+    .rr-ratio.bad {
+      color: #dc3545;
+    }
+    
+    .error-box {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .error-box ul {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-approve {
+      background: #28a745;
+      color: white;
+    }
+    
+    .btn-approve:hover:not(:disabled) {
+      background: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+    }
+    
+    .btn-cancel {
+      background: #6c757d;
+      color: white;
+    }
+    
+    .btn-cancel:hover {
+      background: #5a6268;
+    }
+    
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+    
+    .history-table th {
+      background: #f8f9fa;
+      padding: 10px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid #dee2e6;
+    }
+    
+    .history-table td {
+      padding: 10px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .badge-buy {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .badge-sell {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>🎯 Pre-Trade Checklist</h1>
+      <div id="timeStatus" class="time-status"></div>
+      
+      <div id="successMessage" class="success-message" style="display: none;">
+        ✅ Trade Approved & Logged!
+      </div>
+      
+      <div id="errorBox" class="error-box" style="display: none;">
+        <strong>❌ Cannot Execute Trade:</strong>
+        <ul id="errorList"></ul>
+      </div>
+      
+      <form id="tradeForm">
+        <div class="form-group">
+          <label>Account (Prop Firm)</label>
+          <select id="account" required>
+            <option value="">Select...</option>
+            <option value="Personal">Personal</option>
+            <option value="Lucid">Lucid</option>
+            <option value="Tradovate">Tradovate</option>
+            <option value="Phidias">Phidias</option>
+            <option value="TradeDay">TradeDay</option>
+            <option value="TakeProfitTrader">TakeProfitTrader</option>
+            <option value="FTMO">FTMO</option>
+            <option value="TopStep">TopStep</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Account ID</label>
+          <input type="text" id="accountId" placeholder="LFE0505707701015">
+        </div>
+        
+        <div class="form-group">
+          <label>Account Type</label>
+          <input type="text" id="accountType" placeholder="Lucid Flex 50k">
+        </div>
+        
+        <div class="form-group">
+          <label>Symbol (Futures Asset)</label>
+          <select id="symbol" required>
+            <option value="">Select...</option>
+            <option value="Gold">Gold (GC)</option>
+            <option value="Silver">Silver (SI)</option>
+            <option value="Crude Oil">Crude Oil (CL)</option>
+            <option value="Natural Gas">Natural Gas (NG)</option>
+            <option value="Nasdaq">Nasdaq 100 (NQ)</option>
+            <option value="S&P 500">S&P 500 (ES)</option>
+            <option value="Dow Jones">Dow Jones (YM)</option>
+            <option value="Russell 2000">Russell 2000 (RTY)</option>
+            <option value="Bitcoin">Bitcoin (BTC)</option>
+            <option value="Ethereum">Ethereum (ETH)</option>
+            <option value="Euro">Euro (6E)</option>
+            <option value="10-Year Treasury">10-Year Treasury (ZN)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Contract (Optional)</label>
+          <input type="text" id="contract" placeholder="e.g., GCG6, NQH6">
+        </div>
+        
+        <div class="form-group">
+          <label>Direction</label>
+          <select id="direction" required>
+            <option value="">Select...</option>
+            <option value="buy">BUY (at low)</option>
+            <option value="sell">SELL (at high)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Entry Price ($)</label>
+          <input type="number" id="entry" step="0.01" placeholder="45.23" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Stop Loss ($)</label>
+          <input type="number" id="stop" step="0.01" placeholder="44.80" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Target Price ($)</label>
+          <input type="number" id="target" step="0.01" placeholder="46.10" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Position Size (shares/contracts)</label>
+          <input type="number" id="positionSize" step="1" placeholder="100" required>
+        </div>
+        
+        <div class="rr-display" id="rrDisplay" style="display: none;">
+          <h3>📊 Risk/Reward Analysis</h3>
+          <div class="rr-grid">
+            <div class="rr-item">
+              <span class="rr-label">Risk:</span>
+              <span class="rr-value" id="riskValue">$0.00</span>
+            </div>
+            <div class="rr-item">
+              <span class="rr-label">Reward:</span>
+              <span class="rr-value" id="rewardValue">$0.00</span>
+            </div>
+            <div class="rr-item">
+              <span class="rr-label">Max Risk:</span>
+              <span class="rr-value" id="maxRiskValue">$0.00</span>
+            </div>
+            <div class="rr-ratio" id="rrRatio">
+              <span>R:R Ratio:</span>
+              <span id="rrValue">1:0.00</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="stopOnPrevious" required>
+            <label for="stopOnPrevious" style="margin-bottom: 0;">Stop loss on previous low/high</label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="fibTarget" required>
+            <label for="fibTarget" style="margin-bottom: 0;">Target based on Fibonacci levels</label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="conviction">
+            <label for="conviction" style="margin-bottom: 0;">Price bounced with CONVICTION</label>
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button>
+          <button type="submit" class="btn-approve" id="approveBtn">Approve Trade</button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="card">
+      <h2 style="margin-bottom: 15px;">📝 Recent Trades</h2>
+      <div id="tradeHistory">Loading...</div>
+    </div>
+  </div>
+  
+  <script>
+    let currentTimeStatus = false;
+    
+    // Check time on load
+    async function checkTime() {
+      const res = await fetch('http://104.236.41.155:8080/api/time');
+      const data = await res.json();
+      
+      const statusEl = document.getElementById('timeStatus');
+      currentTimeStatus = data.allowed;
+      
+      if (data.allowed) {
+        statusEl.className = 'time-status open';
+        statusEl.textContent = `✅ Market Open - ${data.currentTime} EST`;
+      } else {
+        statusEl.className = 'time-status closed';
+        statusEl.textContent = `🔒 Outside Trading Hours - ${data.currentTime} EST (${data.tradingHours})`;
+      }
+      
+      document.getElementById('approveBtn').disabled = !data.allowed;
+    }
+    
+    // Calculate R:R as user types
+    function calculateRR() {
+      const entry = parseFloat(document.getElementById('entry').value);
+      const stop = parseFloat(document.getElementById('stop').value);
+      const target = parseFloat(document.getElementById('target').value);
+      const positionSize = parseFloat(document.getElementById('positionSize').value) || 0;
+      
+      if (!entry || !stop || !target) {
+        document.getElementById('rrDisplay').style.display = 'none';
+        return;
+      }
+      
+      const risk = Math.abs(entry - stop);
+      const reward = Math.abs(target - entry);
+      const rr = reward / risk;
+      const maxRisk = risk * positionSize;
+      
+      document.getElementById('rrDisplay').style.display = 'block';
+      document.getElementById('riskValue').textContent = `$${risk.toFixed(2)}`;
+      document.getElementById('rewardValue').textContent = `$${reward.toFixed(2)}`;
+      document.getElementById('maxRiskValue').textContent = `$${maxRisk.toFixed(2)}`;
+      document.getElementById('rrValue').textContent = `1:${rr.toFixed(2)}`;
+      
+      const rrRatio = document.getElementById('rrRatio');
+      if (rr >= 2) {
+        rrRatio.className = 'rr-ratio good';
+      } else {
+        rrRatio.className = 'rr-ratio bad';
+      }
+    }
+    
+    // Form submission
+    document.getElementById('tradeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const data = {
+        account: document.getElementById('account').value,
+        accountId: document.getElementById('accountId').value,
+        accountType: document.getElementById('accountType').value,
+        symbol: document.getElementById('symbol').value,
+        direction: document.getElementById('direction').value,
+        entry: parseFloat(document.getElementById('entry').value),
+        stop: parseFloat(document.getElementById('stop').value),
+        target: parseFloat(document.getElementById('target').value),
+        positionSize: parseFloat(document.getElementById('positionSize').value),
+        stopOnPrevious: document.getElementById('stopOnPrevious').checked,
+        fibTarget: document.getElementById('fibTarget').checked,
+        conviction: document.getElementById('conviction').checked,
+      };
+      
+      // Validate
+      const res = await fetch('http://104.236.41.155:8080/api/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      
+      const result = await res.json();
+      
+      if (!result.valid) {
+        const errorBox = document.getElementById('errorBox');
+        const errorList = document.getElementById('errorList');
+        
+        errorBox.style.display = 'block';
+        
+        if (result.error) {
+          errorList.innerHTML = `<li>${result.message}</li>`;
+        } else {
+          errorList.innerHTML = result.errors.map(err => `<li>${err}</li>`).join('');
+        }
+        
+        document.getElementById('successMessage').style.display = 'none';
+        return;
+      }
+      
+      // Log trade
+      const logRes = await fetch('http://104.236.41.155:8080/api/log-trade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          risk: result.risk,
+          reward: result.reward,
+          rr: result.rr,
+          maxRisk: result.maxRisk,
+        }),
+      });
+      
+      await logRes.json();
+      
+      // Show success
+      document.getElementById('errorBox').style.display = 'none';
+      document.getElementById('successMessage').style.display = 'block';
+      
+      // Reload history
+      loadHistory();
+      
+      // Reset form after 2 seconds
+      setTimeout(() => {
+        resetForm();
+        document.getElementById('successMessage').style.display = 'none';
+      }, 2000);
+    });
+    
+    function resetForm() {
+      document.getElementById('tradeForm').reset();
+      document.getElementById('rrDisplay').style.display = 'none';
+      document.getElementById('errorBox').style.display = 'none';
+    }
+    
+    async function journalTradeFromHistory(trade) {
+      // Find the button that was clicked
+      const buttons = document.querySelectorAll('[id^="journal-btn-"]');
+      let btn = null;
+      
+      for (const b of buttons) {
+        if (b.textContent.includes('Journal')) {
+          // Check if this is the button for our trade by comparing timestamp
+          const row = b.closest('tr');
+          const timeCell = row.querySelector('td:first-child');
+          const tradeTime = new Date(trade.timestamp).toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+          });
+          
+          if (timeCell.textContent === tradeTime) {
+            btn = b;
+            break;
+          }
+        }
+      }
+      
+      if (!btn) return;
+      
+      btn.textContent = 'Journaling...';
+      btn.disabled = true;
+      
+      try {
+        const res = await fetch('http://104.236.41.155:8080/api/journal-to-notion', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(trade),
+        });
+        
+        const result = await res.json();
+        
+        if (result.success) {
+          btn.textContent = '✅ Journaled!';
+          btn.style.background = '#28a745';
+        } else {
+          btn.textContent = '❌ Failed';
+          btn.style.background = '#dc3545';
+          btn.disabled = false;
+          alert('Failed to journal: ' + result.error);
+        }
+      } catch (error) {
+        btn.textContent = '❌ Error';
+        btn.style.background = '#dc3545';
+        btn.disabled = false;
+        alert('Error: ' + error.message);
+      }
+    }
+    
+    async function loadHistory() {
+      const res = await fetch('http://104.236.41.155:8080/api/trades');
+      const data = await res.json();
+      
+      const historyEl = document.getElementById('tradeHistory');
+      
+      if (data.trades.length === 0) {
+        historyEl.innerHTML = '<p style="color: #999;">No trades yet</p>';
+        return;
+      }
+      
+      const table = `
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Symbol</th>
+              <th>Account</th>
+              <th>Dir</th>
+              <th>Entry</th>
+              <th>R:R</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.trades.slice(0, 10).map((t, idx) => `
+              <tr>
+                <td>${new Date(t.timestamp).toLocaleString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  hour: 'numeric', 
+                  minute: '2-digit' 
+                })}</td>
+                <td><strong>${t.symbol || 'N/A'}</strong></td>
+                <td>${t.account || 'N/A'}</td>
+                <td><span class="badge badge-${t.direction}">${t.direction.toUpperCase()}</span></td>
+                <td>$${t.entry}</td>
+                <td>1:${t.rr}</td>
+                <td>
+                  <button onclick='journalTradeFromHistory(${JSON.stringify(t).replace(/'/g, "\\'")})'
+                    style="padding: 4px 12px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;"
+                    id="journal-btn-${idx}">
+                    📝 Journal
+                  </button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      
+      historyEl.innerHTML = table;
+    }
+    
+    // Event listeners
+    ['entry', 'stop', 'target', 'positionSize'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateRR);
+    });
+    
+    // Initialize
+    checkTime();
+    loadHistory();
+    setInterval(checkTime, 60000); // Update time every minute
+  </script>
+</body>
+</html>
